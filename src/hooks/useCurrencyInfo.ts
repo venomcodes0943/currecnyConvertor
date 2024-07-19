@@ -4,8 +4,8 @@ interface CurrencyData {
     [key: string]: number;
 }
 
-function useCurrencyInfo(currency: string): CurrencyData | object | undefined {
-    const [data, setData] = useState<object>({});
+function useCurrencyInfo(currency: string): CurrencyData | undefined {
+    const [data, setData] = useState<CurrencyData | undefined>(undefined);
 
     useEffect(() => {
         fetch(`https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${currency}.json`)

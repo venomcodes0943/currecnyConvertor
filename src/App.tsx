@@ -4,9 +4,6 @@ import useCurrencyInfo from "./hooks/useCurrencyInfo"
 import { Button } from "@/components/ui/button"
 import InputCard from "./InputCard"
 
-interface CurrencyInfo {
-  [key: string]: number;
-}
 
 function App() {
   const [amount, setAmount] = useState<number>(0);
@@ -14,17 +11,19 @@ function App() {
   const [to, setTo] = useState<string>('pkr');
   const [result, setResult] = useState<string>('');
 
-  const currencyInfo: CurrencyInfo = useCurrencyInfo(from)
-  const options = Object.keys(currencyInfo);
+  const currencyInfo = useCurrencyInfo(from)
+  const options = currencyInfo ? Object.keys(currencyInfo) : [];
 
   const swap = () => {
     setResult(amount.toString());
     setFrom(to);
     setTo(from);
-    setAmount(parseFloat(result));
+    setAmount(parseFloat(result) || 0);
   }
   const convert = () => {
-    setResult((amount * currencyInfo[to]).toString());
+    if (currencyInfo) {
+      setResult((amount * (currencyInfo[to] || 0)).toString());
+    }
   }
 
   return (
