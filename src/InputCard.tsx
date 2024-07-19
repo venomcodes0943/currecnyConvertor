@@ -31,7 +31,7 @@ const InputCard: React.FC<InputCardProps> = (
             <div className="flex items-center justify-center md:justify-between space-y-2 md:space-y-0 flex-wrap">
                 <div className="w-full md:w-auto">
                     <Label htmlFor="from" className="block pb-2 text-md md:text-lg font-bold">{label}</Label>
-                    <Input id="from" value={amount} onChange={(e) => onAmountChange && onAmountChange(Number(e.target.value))} type="number" placeholder="Enter amount" className="w-full  md:w-80" />
+                    <Input id="from" value={amount} onChange={(e) => onAmountChange(Number(e.target.value))} type="number" placeholder="Enter amount" className="w-full  md:w-80" />
                 </div>
                 <div className="w-full md:w-auto">
                     <Label className="block pb-2 text-md md:text-lg font-bold">Currency Type</Label>

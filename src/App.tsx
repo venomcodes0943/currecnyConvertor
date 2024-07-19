@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { Card } from "@/components/ui/card"
 import useCurrencyInfo from "./hooks/useCurrencyInfo"
 import { Button } from "@/components/ui/button"
@@ -12,20 +12,32 @@ function App() {
   const [result, setResult] = useState<string>('');
 
   const currencyInfo = useCurrencyInfo(from)
-  const options = currencyInfo ? Object.keys(currencyInfo) : [];
+  const options = useMemo(() => currencyInfo ? Object.keys(currencyInfo) : [], [currencyInfo]);
 
-  const swap = () => {
+  const swap = useCallback(() => {
     setResult(amount.toString());
     setFrom(to);
     setTo(from);
     setAmount(parseFloat(result) || 0);
-  }
-  const convert = () => {
+  }, [amount, from, to, result]);
+
+  const convert = useCallback(() => {
     if (currencyInfo) {
       setResult((amount * (currencyInfo[to] || 0)).toString());
     }
-  }
+  }, [amount, currencyInfo, to]);
 
+  const handleAmountChange = useCallback((value: number) => {
+    setAmount(value);
+  }, []);
+
+  const handleFromCurrencyChange = useCallback((value: string) => {
+    setFrom(value);
+  }, []);
+
+  const handleToCurrencyChange = useCallback((value: string) => {
+    setTo(value);
+  }, []);
   return (
     <div className=" h-screen px-2  bg-slate-100 flex items-center justify-center">
       <Card className="backdrop-blur-sm bg-slate-200/15 px-2 md:px-8 py-4 md:py-6">
@@ -33,20 +45,20 @@ function App() {
           label="From"
           amount={amount}
           currencyOptions={options}
-          onAmountChange={(value: number) => setAmount(value)}
+          onAmountChange={handleAmountChange}
           selectCurrency={from}
-          onCurrencyChange={(value: string) => setFrom(value)}
+          onCurrencyChange={handleFromCurrencyChange}
         />
 
         <Button className="font-bold w-full my-2 md:text-lg" onClick={swap}>Swap</Button>
 
         <InputCard
           label="To"
-          amount={parseFloat(result)}
+          amount={parseFloat(result) || 0}
           currencyOptions={options}
-          onAmountChange={(value: number) => setAmount(value)}
+          onAmountChange={handleAmountChange}
           selectCurrency={to}
-          onCurrencyChange={(value: string) => setTo(value)}
+          onCurrencyChange={handleToCurrencyChange}
         />
         <div className="mt-3">
           <Button className="font-bold w-full my-2 md:text-lg bg-red-600 hover:bg-red-500"
